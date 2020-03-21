@@ -1,0 +1,9 @@
+#To compile and upload arduino code using catkin_make:
+#as usual, catkin_make first
+catkin_make
+
+#then, upload to arduino using:
+model_train_control_arduino_firmware_mtca-upload
+(and maybe catkin_make model_train_control_arduino_firmware_mtca  before that)
+
+#note: ensure that there are no nodes or processes writing serial info to arduino while uploading, and vice-versa

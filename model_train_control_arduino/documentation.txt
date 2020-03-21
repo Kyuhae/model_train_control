@@ -1,0 +1,16 @@
+Information about the model train controller, mainly the correspondence between arduino implementation and real-world counterparts.
+
+#AUTOMATION
+##Railway
+###Points
+servos control points.
+current configuration:
+name on arduino: servo1
+signal pin: 4
+physical point: UK station module hillside points
+
+name on arduino: servo2
+signal pin: 2
+physical point: UK station module townside points 
+
+
