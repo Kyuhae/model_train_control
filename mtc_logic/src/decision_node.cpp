@@ -7,6 +7,7 @@ decision::decision() {
     sub_throttle_slider = n.subscribe("throttle_slider", 1, &decision::throttleSliderCallback, this);
     sub_dir = n.subscribe("dir", 1, &decision::dirCallback, this);
     sub_point_command = n.subscribe("point_command", 1, &decision::pointCommandCallback, this);
+    sub_action = n.subscribe("action", 1, &decision::actionCallback, this);
 
     pub_ard_throttle = n.advertise<std_msgs::UInt8>("ard_throttle", 0);
     pub_ard_dir = n.advertise<std_msgs::UInt8>("ard_dir", 0);
@@ -16,6 +17,7 @@ decision::decision() {
 
 
     new_man_t = false;
+    new_action_cmd = false;
 
     //setup points
     Point *p = new Point(POINT_1_PIN, POINT_1_STRAIGHT, POINT_1_TURN, true, pub_ard_point_command );
@@ -23,31 +25,18 @@ decision::decision() {
     p = new Point(POINT_2_PIN, POINT_2_STRAIGHT, POINT_2_TURN, true, pub_ard_point_command );
     points_map[POINT_2_PIN] = p;
 
-#if PRINT_DEBUG_DECISION_STEPS
-    ROS_INFO("End of Constructor");
-#endif
 
+    current_loco = new Loco(this);
+
+    m_sm = new StateMachine(this);
+
+
+    ROS_INFO(" --- DECISION NODE ---");
     //INFINTE LOOP TO COLLECT LASER DATA AND PROCESS THEM
     ros::Rate r(DECISION_NODE_FREQUENCY);// this node will work at 10hz
     while (ros::ok()) {
-#if PRINT_EXEC_TIME
-        start_ = ros::WallTime::now();
-#endif
-
         ros::spinOnce();//each callback is called once
         update();
-
-#if PRINT_EXEC_TIME
-        end_ = ros::WallTime::now();
-        double execution_time = (end_ - start_).toNSec() * 1e-6;
-
-        if (execution_time > (1000.0 * 1.0/DECISION_NODE_FREQUENCY)) {
-            ROS_WARN_STREAM("[TOO SLOW] Exectution time (ms): " << execution_time);
-        }
-        else {
-            ROS_INFO_STREAM("[OK] Exectution time (ms): " << execution_time);
-        }
-#endif
         r.sleep();//we wait if the processing (ie, callback+update) has taken less than 1.0/DECISION_NODE_FREQUENCY
     }
 }
@@ -57,17 +46,31 @@ decision::decision() {
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 void decision::update() {
+    ROS_INFO("update!");
+    //switch state if new action
+    if (new_action_cmd) {
+        new_action_cmd = false;
+        m_sm->switchState(last_action_cmd);
+    }
 
+
+    //run current state
+    m_sm->runCurrentState();
+
+    //update throttle values
+    std_msgs::UInt8 msg;
+    msg.data = int(throttle1);
+    pub_ard_throttle.publish(msg);
+    ROS_INFO("pub ard_throttle: %d", msg.data);
 
 }// update
 
 
 void decision::throttleSliderCallback(const std_msgs::Float32ConstPtr &val) {
     ROS_INFO("slider callback %f", val->data);
-    std_msgs::UInt8 message;
-    message.data = int(val->data * 255.0);
-    ROS_INFO("pub man_throttle: %d", message.data);
-    pub_ard_throttle.publish(message);
+    m_sm->switchState(STATE_IDLE);
+    throttle1 = 255.0*val->data;
+
 }
 
 void decision::dirCallback(const std_msgs::Int32ConstPtr& dir) {
@@ -83,6 +86,12 @@ void decision::pointCommandCallback(const std_msgs::Int32ConstPtr& point_pin) {
     Point *p = points_map[point_pin->data];
     p->switch_pos();
     ROS_INFO("pub point %d switch", point_pin->data);
+}
+
+void decision::actionCallback(const std_msgs::Int32ConstPtr& action) {
+    ROS_INFO("received action");
+    new_action_cmd = true;
+    last_action_cmd = static_cast<StateEnum>(action->data);
 }
 
 

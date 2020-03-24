@@ -21,6 +21,8 @@ public slots:
     void reportPoint1ButtonClicked();
     void reportPoint2ButtonClicked();
     void reportShortWhistleClicked();
+    void reportStationDepartClicked();
+    void reportStationArriveClicked();
 
     void run();
 
@@ -34,6 +36,7 @@ private:
     ros::Publisher m_pub_throttle_slider;
     ros::Publisher m_pub_point_command;
     ros::Publisher m_pub_sound_id;
+    ros::Publisher m_pub_action;
 
     QTimer *m_emergency_stop_timer = nullptr;
 

@@ -53,10 +53,20 @@ void Communicator::reportPoint2ButtonClicked() {
 void Communicator::reportShortWhistleClicked() {
     ROS_INFO("reportShortWhistleClicked");
     std_msgs::Int32 sound_clip_id;
-    sound_clip_id.data = static_cast<int>(SHORT_WHISTLE);
+    sound_clip_id.data = static_cast<int>(SND_SHORT_WHISTLE);
     m_pub_sound_id.publish(sound_clip_id);
-    system("paplay /home/phil/catkin_ws/src/model_train_control/resources/sound/d51/d51_short_whistle_brake_hiss.flac");
-    ROS_INFO("played");
+}
+
+void Communicator::reportStationDepartClicked() {
+    std_msgs::Int32 state;
+    state.data = static_cast<int>(STATE_STATION_DEPART);
+    m_pub_action.publish(state);
+}
+
+void Communicator::reportStationArriveClicked() {
+    std_msgs::Int32 state;
+    state.data = static_cast<int>(STATE_STATION_ARRIVE);
+    m_pub_action.publish(state);
 }
 
 void Communicator::run() {
@@ -65,6 +75,7 @@ void Communicator::run() {
     m_pub_throttle_slider = m_ros_node_handle->advertise<std_msgs::Float32>("throttle_slider", 1);
     m_pub_point_command = m_ros_node_handle->advertise<std_msgs::Int32>("point_command", 1);
     m_pub_sound_id = m_ros_node_handle->advertise<std_msgs::Int32>("sound_id", 1);
+    m_pub_action = m_ros_node_handle->advertise<std_msgs::Int32>("action", 1);
 
     m_emergency_stop_timer = new QTimer();
     m_emergency_stop_timer->setInterval(20);

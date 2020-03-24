@@ -92,6 +92,7 @@ Rectangle {
         width: 125
         height: 125
         color: point2_button.toggled ? "green" : "red"
+        anchors.leftMargin: 6
         anchors.rightMargin: 17
         anchors.topMargin: 0
         visible: true
@@ -388,4 +389,79 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
         }
     }
+
+    Rectangle {
+        id: station_depart
+        property bool toggled: true
+        x: 0
+        y: 0
+
+        width: 125
+        height: 125
+        color: "#649bd2"
+        anchors.rightMargin: 17
+        anchors.topMargin: 261
+        visible: true
+
+        anchors {
+            top: parent.top
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                station_depart.toggled = !station_depart.toggled
+                console.log("CLICKED station_depart");
+                handler.onstation_depart_clicked();
+            }
+        }
+        Text {
+            text: "Station\nDepart"
+            anchors.fill: parent
+            font.pixelSize: 25
+            font.capitalization: Font.SmallCaps
+            font.bold: true
+            font.family: "Arial"
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+        }
+    }
+    
+    Rectangle {
+        id: station_arrive
+        property bool toggled: true
+        x: 131
+        y: 0
+
+        width: 125
+        height: 125
+        color: "#649bd2"
+        anchors.rightMargin: 150
+        anchors.topMargin: 261
+        visible: true
+
+        anchors {
+            top: parent.top
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                station_arrive.toggled = !station_arrive.toggled
+                console.log("CLICKED station_arrive");
+                handler.onstation_arrive_clicked();
+            }
+        }
+        Text {
+            text: "Station\nArrive"
+            anchors.fill: parent
+            font.pixelSize: 25
+            font.capitalization: Font.SmallCaps
+            font.bold: true
+            font.family: "Arial"
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+        }
+    }
+
 }

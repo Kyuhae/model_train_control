@@ -110,6 +110,12 @@ include_directories(
 set(COMMON_SRCS
     ../common_src/globals.cpp
     ../common_src/globals.h
+    ../common_src/state.cpp
+    ../common_src/state.h
+    ../common_src/state_machine.cpp
+    ../common_src/state_machine.h
+    ../common_src/loco.cpp
+    ../common_src/loco.h
 )
 add_executable(mtc_l_decision_node src/decision_node.cpp src/point.h src/point.cpp ${COMMON_SRCS})
 

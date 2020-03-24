@@ -19,6 +19,8 @@ signals:
     void point1ButtonClicked();
     void point2ButtonClicked();
     void shortWhistleClicked();
+    void stationDepartClicked();
+    void stationArriveClicked();
 
     void sliderValueChanged(double);
 
@@ -35,6 +37,8 @@ public slots:
     void onPoint1_button_clicked();
     void onPoint2_button_clicked();
     void onShort_whistle_clicked();
+    void onstation_depart_clicked();
+    void onstation_arrive_clicked();
 
 
     double minSliderValue () const;

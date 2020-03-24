@@ -38,6 +38,16 @@ void Handler::onShort_whistle_clicked() {
     emit shortWhistleClicked();
 }
 
+void Handler::onstation_depart_clicked() {
+    qDebug() << __FUNCTION__;
+    emit stationDepartClicked();
+}
+
+void Handler::onstation_arrive_clicked() {
+    qDebug() << __FUNCTION__;
+    emit stationArriveClicked();
+}
+
 
 
 void Handler::onSliderPlusClicked()

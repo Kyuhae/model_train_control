@@ -35,6 +35,10 @@ int main(int argc, char **argv){
     QObject::connect(handler, &Handler::point1ButtonClicked, communicator, &Communicator::reportPoint1ButtonClicked, Qt::QueuedConnection);
     QObject::connect(handler, &Handler::point2ButtonClicked, communicator, &Communicator::reportPoint2ButtonClicked, Qt::QueuedConnection);
     QObject::connect(handler, &Handler::shortWhistleClicked, communicator, &Communicator::reportShortWhistleClicked, Qt::QueuedConnection);
+    QObject::connect(handler, &Handler::stationDepartClicked, communicator, &Communicator::reportStationDepartClicked, Qt::QueuedConnection);
+    QObject::connect(handler, &Handler::stationArriveClicked, communicator, &Communicator::reportStationArriveClicked, Qt::QueuedConnection);
+
+
 
 
 
